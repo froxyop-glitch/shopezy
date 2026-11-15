@@ -20,13 +20,67 @@ function sanitizeUser(user) {
     return safe;
 }
 
-// POST /register
+// POST /send-otp - Generate & Send OTP to Email and Phone for registration
+router.post('/send-otp', (req, res) => {
+    try {
+        const { email, phone } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ success: false, message: 'Email address is required for OTP verification.' });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ success: false, message: 'Please provide a valid email address.' });
+        }
+
+        if (phone && !/^[6-9]\d{9}$/.test(phone)) {
+            return res.status(400).json({ success: false, message: 'Please provide a valid 10-digit Indian mobile number.' });
+        }
+
+        const db = getDb();
+
+        // Check if email already registered
+        const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email.toLowerCase().trim());
+        if (existing) {
+            return res.status(409).json({ success: false, message: 'An account with this email already exists. Please login instead.' });
+        }
+
+        // Generate 6-digit OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes expiry
+
+        // Store OTP in database
+        db.prepare(`
+            INSERT INTO otps (identifier, phone, otp, type, expires_at)
+            VALUES (?, ?, ?, 'registration', ?)
+        `).run(email.toLowerCase().trim(), phone || null, otp, expiresAt);
+
+        console.log(`[Shopezy OTP System] Verification code for ${email} / ${phone}: ${otp}`);
+
+        res.json({
+            success: true,
+            message: `OTP sent to ${email}${phone ? ' and +91 ' + phone : ''}. Valid for 10 minutes.`,
+            otp: otp,
+            expires_in_seconds: 600
+        });
+    } catch (err) {
+        console.error('Send OTP error:', err);
+        res.status(500).json({ success: false, message: 'Failed to send OTP. Please try again.' });
+    }
+});
+
+// POST /register - Complete registration with compulsory OTP verification
 router.post('/register', (req, res) => {
     try {
-        const { name, email, phone, password, address, city, state, pincode } = req.body;
+        const { name, email, phone, password, address, city, state, pincode, otp } = req.body;
 
         if (!name || !email || !password) {
             return res.status(400).json({ success: false, message: 'Name, email, and password are required.' });
+        }
+
+        if (!otp) {
+            return res.status(400).json({ success: false, message: 'OTP verification code is compulsory for creating an account.' });
         }
 
         if (name.trim().length < 2) {
@@ -48,11 +102,29 @@ router.post('/register', (req, res) => {
 
         const db = getDb();
 
+        // Verify OTP
+        const validOtp = db.prepare(`
+            SELECT * FROM otps 
+            WHERE identifier = ? AND otp = ? AND type = 'registration'
+            ORDER BY created_at DESC 
+            LIMIT 1
+        `).get(email.toLowerCase().trim(), otp.trim());
+
+        if (!validOtp) {
+            return res.status(400).json({ success: false, message: 'Invalid OTP code. Please enter the correct code.' });
+        }
+
+        if (new Date(validOtp.expires_at) < new Date()) {
+            return res.status(400).json({ success: false, message: 'This OTP has expired. Please request a new OTP.' });
+        }
+
         const existingUser = db.prepare('SELECT id FROM users WHERE email = ?').get(email.toLowerCase().trim());
         if (existingUser) {
-            db.close();
             return res.status(409).json({ success: false, message: 'An account with this email already exists.' });
         }
+
+        // Clean up OTP
+        db.prepare('DELETE FROM otps WHERE identifier = ?').run(email.toLowerCase().trim());
 
         const hashedPassword = bcrypt.hashSync(password, 10);
 
@@ -71,13 +143,12 @@ router.post('/register', (req, res) => {
         );
 
         const user = db.prepare('SELECT * FROM users WHERE id = ?').get(result.lastInsertRowid);
-        db.close();
 
         const token = generateToken(user);
 
         res.status(201).json({
             success: true,
-            message: 'Registration successful!',
+            message: 'OTP verified! Your Shopezy customer account has been created.',
             token,
             user: sanitizeUser(user)
         });

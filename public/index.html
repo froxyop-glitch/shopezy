@@ -1246,63 +1246,58 @@
         }
         .pwd-toggle-btn:hover { color: var(--primary); }
 
-        /* Footer Staff & Delivery Portal */
+        /* Footer Staff & Delivery Portal (Small Size) */
         .footer-portal-bar {
-            margin-top: 25px;
-            padding: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-            background: rgba(0, 0, 0, 0.15);
-            border-radius: 12px;
+            margin-top: 20px;
+            padding: 10px 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.18);
+            border-radius: 8px;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            gap: 10px;
         }
         .footer-portal-title {
-            color: #F8FAFC;
-            font-size: 0.95rem;
-            font-weight: 700;
+            color: #94A3B8;
+            font-size: 0.78rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .footer-portal-btns {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 8px;
         }
         .footer-portal-btn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: 700;
-            font-size: 0.88rem;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.72rem;
             text-decoration: none;
-            transition: all 0.25s ease;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+            opacity: 0.85;
+        }
+        .footer-portal-btn:hover {
+            opacity: 1;
+            transform: translateY(-1px);
         }
         .footer-portal-btn.admin {
-            background: linear-gradient(135deg, #FF6B35, #E55A28);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .footer-portal-btn.admin:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255,107,53,0.4);
-            color: white;
+            background: rgba(255, 107, 53, 0.2);
+            color: #FFB088;
+            border: 1px solid rgba(255, 107, 53, 0.4);
         }
         .footer-portal-btn.driver {
-            background: linear-gradient(135deg, #0284C7, #0369A1);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .footer-portal-btn.driver:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(2,132,199,0.4);
-            color: white;
+            background: rgba(2, 132, 199, 0.2);
+            color: #7DD3FC;
+            border: 1px solid rgba(2, 132, 199, 0.4);
         }
 
         /* Mobile Fixed Bottom Navigation Bar */
@@ -1386,11 +1381,9 @@
                 <i class="fas fa-map-marker-alt" style="color: #F7C948;"></i> Express Delivery across <strong>Cooch Behar</strong> (Palace, Sagardighi, Dinhata, Tufanganj)
             </div>
             <div style="display: flex; gap: 16px; align-items: center;">
-                <a href="/admin.html" target="_blank" style="color: #F7C948; font-weight: 700; text-decoration: none;"><i class="fas fa-crown"></i> Admin Panel</a>
-                <span style="opacity: 0.4;">|</span>
-                <a href="/driver.html" target="_blank" style="color: #FF6B35; font-weight: 700; text-decoration: none;"><i class="fas fa-motorcycle"></i> Delivery Boy App</a>
-                <span style="opacity: 0.4;">|</span>
                 <a onclick="navigateTo('/track')" style="color: white; cursor: pointer;"><i class="fas fa-truck"></i> Track Order</a>
+                <span style="opacity: 0.4;">|</span>
+                <span style="color: #F7C948;"><i class="fas fa-headset"></i> Helpline: <strong id="topPhone">+91 98765 43210</strong></span>
             </div>
         </div>
     </div>
@@ -1422,9 +1415,6 @@
                         <div id="loggedOutMenu">
                             <a onclick="showModal('login')"><i class="fas fa-sign-in-alt"></i>Login</a>
                             <a onclick="showModal('signup')"><i class="fas fa-user-plus"></i>Sign Up</a>
-                            <hr style="border:0; border-top:1px solid #eee; margin:4px 0;">
-                            <a href="/admin.html" target="_blank"><i class="fas fa-crown" style="color:#FF6B35;"></i>Admin Console</a>
-                            <a href="/driver.html" target="_blank"><i class="fas fa-motorcycle" style="color:#004E89;"></i>Delivery Boy App</a>
                         </div>
                         <div id="loggedInMenu" style="display:none">
                             <a onclick="navigateTo('/profile')"><i class="fas fa-user"></i>My Profile</a>
@@ -1432,8 +1422,6 @@
                             <a onclick="navigateTo('/wishlist')"><i class="fas fa-heart"></i>Wishlist</a>
                             <a onclick="navigateTo('/track')"><i class="fas fa-map-marker-alt"></i>Track Order</a>
                             <hr style="border:0; border-top:1px solid #eee; margin:4px 0;">
-                            <a href="/admin.html" target="_blank"><i class="fas fa-crown" style="color:#FF6B35;"></i>Admin Console</a>
-                            <a href="/driver.html" target="_blank"><i class="fas fa-motorcycle" style="color:#004E89;"></i>Delivery Boy App</a>
                             <a onclick="logout()"><i class="fas fa-sign-out-alt"></i>Logout</a>
                         </div>
                     </div>
@@ -1580,49 +1568,94 @@
     </div>
 
     <div class="modal-overlay" id="signupModal">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width: 440px;">
             <button class="modal-close" onclick="closeModal('signup')">&times;</button>
-            <h2>Create Account</h2>
-            <p class="subtitle">Join Shopezy today</p>
-            <form onsubmit="handleSignup(event)">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="signupName" placeholder="Enter your full name" required>
-                    <div class="form-error">Name is required</div>
-                </div>
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="signupEmail" placeholder="Enter your email" required>
-                    <div class="form-error">Please enter a valid email</div>
-                </div>
-                <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="tel" id="signupPhone" placeholder="Enter your phone number" required>
-                    <div class="form-error">Phone number is required</div>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <div class="pwd-field-wrap">
-                        <input type="password" id="signupPassword" placeholder="Create a password" required minlength="6" autocomplete="new-password">
-                        <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('signupPassword', this)">
-                            <i class="fas fa-eye"></i>
-                        </button>
+            
+            <!-- STEP 1: REGISTRATION DETAILS -->
+            <div id="signupStep1">
+                <h2>Create Account</h2>
+                <p class="subtitle">Join Shopezy • Fast OTP verification via Email & SMS</p>
+                
+                <form onsubmit="handleSendSignupOtp(event)">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Full Name *</label>
+                        <input type="text" id="signupName" placeholder="Enter your full name" required>
                     </div>
-                    <div class="form-error">Minimum 6 characters</div>
-                </div>
-                <div class="form-group">
-                    <label>Confirm Password</label>
-                    <div class="pwd-field-wrap">
-                        <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required autocomplete="new-password">
-                        <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('signupConfirmPassword', this)">
-                            <i class="fas fa-eye"></i>
-                        </button>
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email Address (for OTP) *</label>
+                        <input type="email" id="signupEmail" placeholder="e.g. name@example.com" required>
                     </div>
-                    <div class="form-error">Passwords do not match</div>
+                    <div class="form-group">
+                        <label><i class="fas fa-mobile-alt"></i> Mobile Number (for SMS OTP) *</label>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="background:#E2E8F0; padding:10px 12px; border-radius:6px; font-weight:700; font-size:0.9rem; color:#475569;">+91</span>
+                            <input type="tel" id="signupPhone" placeholder="10-digit mobile number" maxlength="10" required style="flex:1;">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Password *</label>
+                        <div class="pwd-field-wrap">
+                            <input type="password" id="signupPassword" placeholder="Create a password (min 6 chars)" required minlength="6" autocomplete="new-password">
+                            <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('signupPassword', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-shield-alt"></i> Confirm Password *</label>
+                        <div class="pwd-field-wrap">
+                            <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required autocomplete="new-password">
+                            <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('signupConfirmPassword', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit" id="btnSendOtp">
+                        <i class="fas fa-paper-plane"></i> Send OTP to Email & Phone
+                    </button>
+                </form>
+                <p class="switch-text">Already have an account? <a onclick="showModal('login');closeModal('signup')">Login</a></p>
+            </div>
+
+            <!-- STEP 2: ENTER OTP -->
+            <div id="signupStep2" style="display:none; text-align:center;">
+                <div style="width:64px; height:64px; border-radius:50%; background:rgba(255,107,53,0.12); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:1.8rem; margin:0 auto 16px;">
+                    <i class="fas fa-sms"></i>
                 </div>
-                <button type="submit" class="btn-submit">Create Account</button>
-            </form>
-            <p class="switch-text">Already have an account? <a onclick="showModal('login');closeModal('signup')">Login</a></p>
+                <h2>Verify Your Account</h2>
+                <p class="subtitle" style="margin-bottom:14px;">
+                    We sent a 6-digit OTP code to <br/>
+                    <strong id="otpDisplayEmail" style="color:var(--primary);"></strong> & 
+                    <strong id="otpDisplayPhone" style="color:var(--primary);"></strong>
+                </p>
+
+                <!-- Helpful Toast / Demo Badge for Verification -->
+                <div id="otpNoticeBanner" style="background:#FEF3C7; border:1px dashed #D97706; padding:10px; border-radius:8px; font-size:0.85rem; color:#92400E; margin-bottom:16px;">
+                    <i class="fas fa-info-circle"></i> Verification Code: <strong id="demoOtpCode" style="font-size:1.1rem; letter-spacing:2px; font-family:monospace;"></strong>
+                </div>
+
+                <form onsubmit="handleVerifySignupOtp(event)">
+                    <div class="form-group" style="text-align:left;">
+                        <label style="text-align:center; display:block;">Enter 6-Digit OTP Code</label>
+                        <input type="text" id="signupOtpInput" maxlength="6" pattern="\d{6}" placeholder="• • • • • •" required 
+                               style="letter-spacing: 8px; font-size: 1.6rem; text-align: center; font-weight: 800; font-family: monospace; height: 54px;" />
+                    </div>
+                    <button type="submit" class="btn-submit" id="btnVerifyOtp">
+                        <i class="fas fa-check-circle"></i> Verify OTP & Complete Registration
+                    </button>
+                </form>
+
+                <div style="margin-top:14px; font-size:0.85rem; color:var(--gray-600);">
+                    Didn't receive code? 
+                    <span id="resendCountdownSpan" style="color:var(--text-muted);">Resend in <strong id="resendSec">30</strong>s</span>
+                    <a href="#" id="resendOtpLink" onclick="resendSignupOtp();return false;" style="display:none; font-weight:700; color:var(--primary);">Resend OTP</a>
+                </div>
+
+                <button type="button" class="btn-secondary" style="width:100%; margin-top:14px; padding:8px; font-size:0.85rem;" onclick="backToSignupStep1()">
+                    <i class="fas fa-arrow-left"></i> Change Email or Phone
+                </button>
+            </div>
+
         </div>
     </div>
 
@@ -1882,26 +1915,136 @@
         }
     }
 
-    async function handleSignup(e) {
-        e.preventDefault();
-        const name = document.getElementById('signupName').value;
-        const email = document.getElementById('signupEmail').value;
-        const phone = document.getElementById('signupPhone').value;
+    let pendingSignupData = null;
+    let resendInterval = null;
+
+    async function handleSendSignupOtp(e) {
+        if (e) e.preventDefault();
+        const name = document.getElementById('signupName').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
+        const phone = document.getElementById('signupPhone').value.trim();
         const password = document.getElementById('signupPassword').value;
         const confirm = document.getElementById('signupConfirmPassword').value;
-        if (!name || !email || !phone || !password) { showToast('Please fill all fields', 'error'); return; }
-        if (password !== confirm) { showToast('Passwords do not match', 'error'); return; }
-        if (password.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
-        const data = await apiCall('/auth/register', 'POST', { name, email, phone, password });
-        if (data && data.token) {
-            APP.token = data.token;
-            APP.user = data.user;
-            localStorage.setItem('token', data.token);
-            closeModal('signup');
-            updateUserUI();
-            showToast('Account created successfully!');
+
+        if (!name || !email || !phone || !password) {
+            showToast('Please fill all required fields', 'error');
+            return;
+        }
+        if (password !== confirm) {
+            showToast('Passwords do not match', 'error');
+            return;
+        }
+        if (password.length < 6) {
+            showToast('Password must be at least 6 characters', 'error');
+            return;
+        }
+        if (!/^[6-9]\d{9}$/.test(phone)) {
+            showToast('Please enter a valid 10-digit mobile number', 'error');
+            return;
+        }
+
+        const btn = document.getElementById('btnSendOtp');
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending OTP...'; }
+
+        try {
+            const res = await apiCall('/auth/send-otp', 'POST', { email, phone });
+            if (res && res.success) {
+                pendingSignupData = { name, email, phone, password };
+                document.getElementById('otpDisplayEmail').innerText = email;
+                document.getElementById('otpDisplayPhone').innerText = '+91 ' + phone;
+                document.getElementById('demoOtpCode').innerText = res.otp;
+                document.getElementById('signupStep1').style.display = 'none';
+                document.getElementById('signupStep2').style.display = 'block';
+                startResendCountdown();
+                showToast(`OTP sent to ${email} & SMS! Your code: ${res.otp}`, 'info');
+            } else {
+                showToast(res?.message || 'Failed to send OTP', 'error');
+            }
+        } catch (err) {
+            showToast(err.message, 'error');
+        } finally {
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send OTP to Email & Phone'; }
+        }
+    }
+
+    async function handleVerifySignupOtp(e) {
+        if (e) e.preventDefault();
+        const otp = document.getElementById('signupOtpInput').value.trim();
+        if (!otp || otp.length !== 6) {
+            showToast('Please enter the 6-digit OTP code', 'error');
+            return;
+        }
+        if (!pendingSignupData) {
+            showToast('Registration session expired. Please start again.', 'error');
+            backToSignupStep1();
+            return;
+        }
+
+        const btn = document.getElementById('btnVerifyOtp');
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying OTP...'; }
+
+        try {
+            const payload = {
+                ...pendingSignupData,
+                otp
+            };
+            const data = await apiCall('/auth/register', 'POST', payload);
+            if (data && data.token) {
+                APP.token = data.token;
+                APP.user = data.user;
+                localStorage.setItem('token', data.token);
+                closeModal('signup');
+                backToSignupStep1();
+                updateUserUI();
+                showToast('🎉 Account verified and created successfully!');
+                if (APP.currentRoute === '/checkout') {
+                    renderCheckout();
+                }
+            } else {
+                showToast(data?.message || 'OTP verification failed', 'error');
+            }
+        } catch (err) {
+            showToast(err.message, 'error');
+        } finally {
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-check-circle"></i> Verify OTP & Complete Registration'; }
+        }
+    }
+
+    function backToSignupStep1() {
+        document.getElementById('signupStep2').style.display = 'none';
+        document.getElementById('signupStep1').style.display = 'block';
+        if (resendInterval) clearInterval(resendInterval);
+    }
+
+    function startResendCountdown() {
+        let sec = 30;
+        const span = document.getElementById('resendCountdownSpan');
+        const link = document.getElementById('resendOtpLink');
+        const secEl = document.getElementById('resendSec');
+        if (span) span.style.display = 'inline';
+        if (link) link.style.display = 'none';
+
+        if (resendInterval) clearInterval(resendInterval);
+        resendInterval = setInterval(() => {
+            sec--;
+            if (secEl) secEl.innerText = sec;
+            if (sec <= 0) {
+                clearInterval(resendInterval);
+                if (span) span.style.display = 'none';
+                if (link) link.style.display = 'inline';
+            }
+        }, 1000);
+    }
+
+    async function resendSignupOtp() {
+        if (!pendingSignupData) return;
+        const res = await apiCall('/auth/send-otp', 'POST', { email: pendingSignupData.email, phone: pendingSignupData.phone });
+        if (res && res.success) {
+            document.getElementById('demoOtpCode').innerText = res.otp;
+            startResendCountdown();
+            showToast(`New OTP sent! Code: ${res.otp}`, 'info');
         } else {
-            showToast(data?.message || 'Signup failed. Please try again.', 'error');
+            showToast(res?.message || 'Failed to resend OTP', 'error');
         }
     }
 
@@ -2758,10 +2901,195 @@
         }
     }
 
+    // ============ COMPULSORY CUSTOMER LOGIN FOR SHOPPING / ORDERING ============
+    function renderOrderLoginRequired(container) {
+        if (!container) container = document.getElementById('appContent');
+        container.innerHTML = `
+        <div class="container" style="max-width: 580px; padding: 40px 16px;">
+            <div style="background: white; border-radius: 16px; padding: 32px 24px; box-shadow: var(--shadow-lg); border: 1px solid var(--gray-200); text-align: center;">
+                <div style="width: 68px; height: 68px; border-radius: 50%; background: rgba(255,107,53,0.12); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 16px;">
+                    <i class="fas fa-user-lock"></i>
+                </div>
+                <h2 style="font-size: 1.4rem; margin-bottom: 8px;">Customer Account Required</h2>
+                <p style="color: var(--gray-600); font-size: 0.9rem; margin-bottom: 20px;">
+                    To complete your order and enable live delivery tracking across Cooch Behar, please sign in or register with verified OTP.
+                </p>
+
+                <div style="display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid var(--gray-200);">
+                    <button id="chkTabLogin" onclick="switchCheckoutAuthTab('login')" style="flex:1; padding: 10px; font-weight:700; border:none; border-bottom: 3px solid var(--primary); background:none; cursor:pointer; font-size:0.92rem; color:var(--primary);">
+                        <i class="fas fa-sign-in-alt"></i> Existing Customer
+                    </button>
+                    <button id="chkTabSignup" onclick="switchCheckoutAuthTab('signup')" style="flex:1; padding: 10px; font-weight:700; border:none; border-bottom: 3px solid transparent; background:none; cursor:pointer; font-size:0.92rem; color:var(--gray-600);">
+                        <i class="fas fa-user-plus"></i> New Customer (OTP)
+                    </button>
+                </div>
+
+                <!-- CHECKOUT LOGIN FORM -->
+                <div id="chkLoginForm" style="text-align:left;">
+                    <form onsubmit="handleCheckoutLogin(event)">
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="chkLoginEmail" placeholder="Enter your email" required style="width:100%; padding:12px; border:1px solid var(--gray-300); border-radius:8px;">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="pwd-field-wrap">
+                                <input type="password" id="chkLoginPassword" placeholder="Enter password" required style="width:100%; padding:12px; border:1px solid var(--gray-300); border-radius:8px;">
+                                <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('chkLoginPassword', this)"><i class="fas fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary" style="width:100%; padding:14px; font-size:1rem; border-radius:8px; margin-top:8px;">
+                            <i class="fas fa-lock"></i> Login & Proceed to Checkout
+                        </button>
+                    </form>
+                </div>
+
+                <!-- CHECKOUT SIGNUP WITH OTP FORM -->
+                <div id="chkSignupForm" style="display:none; text-align:left;">
+                    <div id="chkSignupStep1">
+                        <div class="form-group">
+                            <label>Full Name *</label>
+                            <input type="text" id="chkName" placeholder="Your name" required style="width:100%; padding:12px; border:1px solid var(--gray-300); border-radius:8px;">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address (for OTP) *</label>
+                            <input type="email" id="chkEmail" placeholder="name@example.com" required style="width:100%; padding:12px; border:1px solid var(--gray-300); border-radius:8px;">
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile Number (for SMS OTP) *</label>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="background:#E2E8F0; padding:10px 12px; border-radius:6px; font-weight:700; font-size:0.9rem; color:#475569;">+91</span>
+                                <input type="tel" id="chkPhone" placeholder="10-digit mobile number" maxlength="10" required style="flex:1; width:100%; padding:12px; border:1px solid var(--gray-300); border-radius:8px;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Password *</label>
+                            <div class="pwd-field-wrap">
+                                <input type="password" id="chkPassword" placeholder="Min 6 characters" required minlength="6" style="width:100%; padding:12px; border:1px solid var(--gray-300); border-radius:8px;">
+                                <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('chkPassword', this)"><i class="fas fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-primary" style="width:100%; padding:14px; font-size:1rem; border-radius:8px; margin-top:8px;" onclick="sendCheckoutOtp()">
+                            <i class="fas fa-paper-plane"></i> Send OTP to Email & Phone
+                        </button>
+                    </div>
+
+                    <div id="chkSignupStep2" style="display:none; text-align:center;">
+                        <div style="background:#FEF3C7; border:1px dashed #D97706; padding:10px; border-radius:8px; font-size:0.85rem; color:#92400E; margin-bottom:14px;">
+                            OTP sent to your email & phone! Verification Code: <strong id="chkDemoOtp" style="font-family:monospace; font-size:1.1rem;"></strong>
+                        </div>
+                        <div class="form-group" style="text-align:center;">
+                            <label>Enter 6-Digit OTP</label>
+                            <input type="text" id="chkOtpInput" maxlength="6" placeholder="• • • • • •" style="letter-spacing: 8px; font-size: 1.5rem; text-align: center; font-weight: 800; font-family: monospace; width:100%; height:50px; border:1px solid var(--gray-300); border-radius:8px;">
+                        </div>
+                        <button type="button" class="btn-primary" style="width:100%; padding:14px; font-size:1rem; border-radius:8px;" onclick="verifyCheckoutOtpAndRegister()">
+                            <i class="fas fa-check-circle"></i> Verify OTP & Place Order
+                        </button>
+                        <button type="button" class="btn-secondary" style="width:100%; margin-top:8px; padding:8px;" onclick="document.getElementById('chkSignupStep2').style.display='none';document.getElementById('chkSignupStep1').style.display='block';">
+                            <i class="fas fa-arrow-left"></i> Change Details
+                        </button>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; font-size: 0.82rem; color: var(--gray-600);">
+                    <i class="fas fa-shield-alt" style="color:var(--green)"></i> 100% Verified Shopezy Security • Cash on Delivery Available
+                </div>
+            </div>
+        </div>`;
+    }
+
+    function switchCheckoutAuthTab(tab) {
+        const loginTab = document.getElementById('chkTabLogin');
+        const signupTab = document.getElementById('chkTabSignup');
+        const loginForm = document.getElementById('chkLoginForm');
+        const signupForm = document.getElementById('chkSignupForm');
+        if (tab === 'login') {
+            loginTab.style.borderBottomColor = 'var(--primary)';
+            loginTab.style.color = 'var(--primary)';
+            signupTab.style.borderBottomColor = 'transparent';
+            signupTab.style.color = 'var(--gray-600)';
+            loginForm.style.display = 'block';
+            signupForm.style.display = 'none';
+        } else {
+            signupTab.style.borderBottomColor = 'var(--primary)';
+            signupTab.style.color = 'var(--primary)';
+            loginTab.style.borderBottomColor = 'transparent';
+            loginTab.style.color = 'var(--gray-600)';
+            signupForm.style.display = 'block';
+            loginForm.style.display = 'none';
+        }
+    }
+
+    async function handleCheckoutLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById('chkLoginEmail').value;
+        const password = document.getElementById('chkLoginPassword').value;
+        if (!email || !password) { showToast('Please enter email and password', 'error'); return; }
+        const data = await apiCall('/auth/login', 'POST', { email, password });
+        if (data && data.token) {
+            APP.token = data.token;
+            APP.user = data.user;
+            localStorage.setItem('token', data.token);
+            updateUserUI();
+            showToast('Welcome back, ' + data.user.name + '! Proceeding to checkout...');
+            renderCheckout();
+        } else {
+            showToast(data?.message || 'Login failed', 'error');
+        }
+    }
+
+    let chkPendingData = null;
+    async function sendCheckoutOtp() {
+        const name = document.getElementById('chkName').value.trim();
+        const email = document.getElementById('chkEmail').value.trim();
+        const phone = document.getElementById('chkPhone').value.trim();
+        const password = document.getElementById('chkPassword').value;
+
+        if (!name || !email || !phone || !password) { showToast('Please fill all fields', 'error'); return; }
+        if (password.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
+        if (!/^[6-9]\d{9}$/.test(phone)) { showToast('Please enter a valid 10-digit mobile number', 'error'); return; }
+
+        const res = await apiCall('/auth/send-otp', 'POST', { email, phone });
+        if (res && res.success) {
+            chkPendingData = { name, email, phone, password };
+            document.getElementById('chkDemoOtp').innerText = res.otp;
+            document.getElementById('chkSignupStep1').style.display = 'none';
+            document.getElementById('chkSignupStep2').style.display = 'block';
+            showToast(`OTP sent to ${email} & +91 ${phone}! Code: ${res.otp}`, 'info');
+        } else {
+            showToast(res?.message || 'Failed to send OTP', 'error');
+        }
+    }
+
+    async function verifyCheckoutOtpAndRegister() {
+        const otp = document.getElementById('chkOtpInput').value.trim();
+        if (!otp || otp.length !== 6) { showToast('Please enter the 6-digit OTP', 'error'); return; }
+        if (!chkPendingData) return;
+
+        const data = await apiCall('/auth/register', 'POST', { ...chkPendingData, otp });
+        if (data && data.token) {
+            APP.token = data.token;
+            APP.user = data.user;
+            localStorage.setItem('token', data.token);
+            updateUserUI();
+            showToast('🎉 Account created! Proceeding to checkout...');
+            renderCheckout();
+        } else {
+            showToast(data?.message || 'OTP verification failed', 'error');
+        }
+    }
+
     // ============ CHECKOUT PAGE ============
     function renderCheckout(container) {
         if (!container) container = document.getElementById('appContent');
         if (APP.cart.length === 0) { navigateTo('/cart'); return; }
+
+        // COMPULSORY ACCOUNT LOGIN FOR SHOPPING / ORDERING
+        if (!APP.token || !APP.user) {
+            renderOrderLoginRequired(container);
+            return;
+        }
+
         const subtotal = APP.cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
         const shipping = subtotal > 500 ? 0 : 49;
         const tax = Math.round(subtotal * 0.05);
@@ -2843,6 +3171,12 @@
     }
 
     async function placeOrder() {
+        if (!APP.token || !APP.user) {
+            showToast('Customer account login is compulsory to place an order', 'error');
+            renderOrderLoginRequired();
+            return;
+        }
+
         const name = document.getElementById('shipName')?.value;
         const phone = document.getElementById('shipPhone')?.value;
         const address = document.getElementById('shipAddress')?.value;

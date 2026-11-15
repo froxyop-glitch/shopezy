@@ -218,10 +218,21 @@ async function initDatabase() {
             key TEXT UNIQUE NOT NULL,
             value TEXT
         );
+
+        CREATE TABLE IF NOT EXISTS otps (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            identifier TEXT NOT NULL,
+            phone TEXT,
+            otp TEXT NOT NULL,
+            type TEXT DEFAULT 'registration',
+            expires_at TEXT NOT NULL,
+            created_at TEXT NOT NULL DEFAULT (datetime('now'))
+        );
     `);
 
     // Create indexes
     db.exec(`
+        CREATE INDEX IF NOT EXISTS idx_otps_identifier ON otps(identifier);
         CREATE INDEX IF NOT EXISTS idx_products_category ON products(category_id);
         CREATE INDEX IF NOT EXISTS idx_products_slug ON products(slug);
         CREATE INDEX IF NOT EXISTS idx_products_active ON products(is_active);

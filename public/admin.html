@@ -598,7 +598,10 @@
             <div style="text-align:center; margin-bottom: 24px;">
                 <i class="fas fa-crown" style="font-size: 3rem; color: var(--primary); margin-bottom: 12px;"></i>
                 <h2 style="font-size: 1.6rem; color: var(--text-main);">Admin Panel</h2>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Shopezy Central Management</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px;">Shopezy Central Management</p>
+                <div style="display:inline-flex; align-items:center; gap:6px; background:#FEF2F2; color:#B91C1C; padding:5px 12px; border-radius:20px; font-size:0.75rem; font-weight:700;">
+                    <i class="fas fa-lock"></i> Compulsory Pass / Password Required
+                </div>
             </div>
             <div class="form-group">
                 <label>Admin Email</label>
@@ -2191,13 +2194,29 @@
 
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-        // Init check
-        if (adminToken) {
-            document.getElementById('loginOverlay').style.display = 'none';
-            loadDashboard();
-            loadAdminNotifications();
-            setInterval(loadAdminNotifications, 15000); // Live poll notifications
+        // Init check: strictly verify compulsory password / token with backend
+        async function checkAdminAuth() {
+            if (!adminToken) {
+                document.getElementById('loginOverlay').style.display = 'flex';
+                return;
+            }
+            try {
+                const res = await api('/admin/dashboard');
+                if (res && res.success) {
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    loadDashboard();
+                    loadAdminNotifications();
+                    setInterval(loadAdminNotifications, 15000); // Live poll notifications
+                } else {
+                    throw new Error('Not authorized');
+                }
+            } catch (e) {
+                adminToken = '';
+                localStorage.removeItem('cb_admin_token');
+                document.getElementById('loginOverlay').style.display = 'flex';
+            }
         }
+        checkAdminAuth();
     </script>
 </body>
 </html>
