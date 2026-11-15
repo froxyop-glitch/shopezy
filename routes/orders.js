@@ -182,11 +182,33 @@ router.post('/', verifyToken, (req, res) => {
         // Clear cart
         db.prepare('DELETE FROM cart_items WHERE user_id = ?').run(req.user.id);
 
-        // Create notification
+        // Create customer notification
         db.prepare(`
             INSERT INTO notifications (user_id, title, message, type)
             VALUES (?, ?, ?, 'order')
         `).run(req.user.id, 'Order Placed!', `Your order ${orderNumber} has been placed successfully. Total: ₹${total}`);
+
+        // Notify Admins
+        try {
+            const adminUsers = db.prepare("SELECT id FROM users WHERE role = 'admin'").all();
+            adminUsers.forEach(adm => {
+                db.prepare(`
+                    INSERT INTO notifications (user_id, title, message, type)
+                    VALUES (?, 'New Order Received', ?, 'order')
+                `).run(adm.id, `Order #${orderNumber} placed for ₹${total}. Needs delivery dispatch.`);
+            });
+        } catch (e) { console.error('Admin notification error:', e); }
+
+        // Notify Available Delivery Riders for Pool
+        try {
+            const drivers = db.prepare("SELECT id FROM users WHERE role = 'delivery' AND is_active = 1").all();
+            drivers.forEach(d => {
+                db.prepare(`
+                    INSERT INTO notifications (user_id, title, message, type)
+                    VALUES (?, 'New Delivery in Pool!', ?, 'delivery')
+                `).run(d.id, `New Order #${orderNumber} (₹${total}) available in Cooch Behar pool. Open your app to claim!`);
+            });
+        } catch (e) { console.error('Driver notification error:', e); }
 
         // Add tracking entry
         db.prepare(`

@@ -231,6 +231,12 @@ router.put('/orders/:id/assign-delivery', (req, res) => {
             VALUES (?, ?, 'assigned', 26.3350, 89.4350, ?)
         `).run(id, delivery_boy_id, `Assigned to ${driver.name} at Cooch Behar Central Hub`);
 
+        // Notify Delivery Partner
+        db.prepare(`
+            INSERT INTO notifications (user_id, title, message, type)
+            VALUES (?, ?, ?, 'delivery')
+        `).run(delivery_boy_id, 'New Order Assigned!', `Order #${order.order_number} has been assigned to you by Admin. Check delivery details in your rider dashboard.`);
+
         res.json({ success: true, message: `Assigned to ${driver.name} successfully` });
     } catch (err) {
         res.status(500).json({ success: false, message: 'Failed to assign delivery partner' });
@@ -504,6 +510,34 @@ router.put('/settings', (req, res) => {
         res.json({ success: true, message: 'Settings updated successfully' });
     } catch (err) {
         res.status(500).json({ success: false, message: 'Failed to update settings' });
+    }
+});
+
+// GET /api/admin/notifications - Get recent admin notifications
+router.get('/notifications', (req, res) => {
+    try {
+        const db = getDb();
+        const notifications = db.prepare(`
+            SELECT * FROM notifications 
+            WHERE user_id = ? 
+            ORDER BY created_at DESC 
+            LIMIT 30
+        `).all(req.user.id);
+        const unreadCount = db.prepare('SELECT COUNT(*) as count FROM notifications WHERE user_id = ? AND is_read = 0').get(req.user.id).count;
+        res.json({ success: true, notifications, unread_count: unreadCount });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Failed to fetch notifications' });
+    }
+});
+
+// PUT /api/admin/notifications/mark-read - Mark all admin notifications as read
+router.put('/notifications/mark-read', (req, res) => {
+    try {
+        const db = getDb();
+        db.prepare('UPDATE notifications SET is_read = 1 WHERE user_id = ?').run(req.user.id);
+        res.json({ success: true, message: 'All notifications marked as read' });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Failed to mark notifications read' });
     }
 });
 

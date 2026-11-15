@@ -730,8 +730,8 @@ function seedDatabase(db) {
 
     // Seed Settings
     const settingsData = [
-        ['site_name', 'CoochBehar Market'],
-        ['site_description', 'Your local e-commerce platform for Cooch Behar'],
+        ['site_name', 'Shopezy'],
+        ['site_description', 'Fastest Online Shopping & Express Delivery in Cooch Behar'],
         ['currency', 'INR'],
         ['currency_symbol', '₹'],
         ['tax_rate', '18'],
@@ -740,9 +740,15 @@ function seedDatabase(db) {
         ['min_order_amount', '100'],
         ['max_order_amount', '500000'],
         ['delivery_radius_km', '25'],
-        ['contact_email', 'support@coochbehar-market.com'],
-        ['contact_phone', '+91 9876543210'],
-        ['contact_address', 'Main Road, Cooch Behar, West Bengal 736101'],
+        ['contact_email', 'care@shopezy.com'],
+        ['contact_phone', '+91 98765 43210'],
+        ['contact_address', 'Shopezy Hub, Near Cooch Behar Palace, Sagardighi, Cooch Behar - 736101'],
+        ['contact_hours', 'Monday - Sunday: 8:00 AM - 10:00 PM'],
+        ['social_facebook', 'https://facebook.com/shopezy.coochbehar'],
+        ['social_instagram', 'https://instagram.com/shopezy.coochbehar'],
+        ['social_twitter', 'https://twitter.com/shopezy_in'],
+        ['social_youtube', 'https://youtube.com/@shopezy'],
+        ['social_whatsapp', 'https://wa.me/919876543210'],
         ['razorpay_key', ''],
         ['razorpay_secret', ''],
         ['cod_enabled', 'true'],
@@ -751,6 +757,7 @@ function seedDatabase(db) {
 
     const insertSetting = db.prepare(`
         INSERT INTO settings (key, value) VALUES (?, ?)
+        ON CONFLICT(key) DO UPDATE SET value = excluded.value
     `);
     for (const setting of settingsData) {
         insertSetting.run(...setting);

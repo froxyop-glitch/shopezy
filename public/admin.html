@@ -474,6 +474,120 @@
             max-width: 420px;
             box-shadow: var(--shadow-lg);
         }
+        /* Password Input Wrapper & Eye Toggle */
+        .pwd-input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .pwd-input-wrap input {
+            padding-right: 42px !important;
+        }
+        .btn-pwd-eye {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+        .btn-pwd-eye:hover { color: var(--primary); }
+
+        /* Notification Bell in Topbar */
+        .notif-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .notif-bell-btn {
+            position: relative;
+            background: #F1F5F9;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .notif-bell-btn:hover {
+            background: #E2E8F0;
+            color: var(--primary);
+        }
+        .notif-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #EF4444;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            box-shadow: 0 2px 4px rgba(239,68,68,0.4);
+        }
+        .notif-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 340px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            z-index: 500;
+            display: none;
+            overflow: hidden;
+            animation: slideUp 0.2s ease;
+        }
+        .notif-header {
+            padding: 12px 16px;
+            background: #F8FAFC;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .notif-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        .notif-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #F1F5F9;
+            font-size: 0.85rem;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            transition: background 0.15s;
+        }
+        .notif-item:hover { background: #F8FAFC; }
+        .notif-item.unread { background: #FEF3C7; }
+        .notif-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: rgba(255,107,53,0.15);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
@@ -488,18 +602,20 @@
             </div>
             <div class="form-group">
                 <label>Admin Email</label>
-                <input type="email" id="adminEmail" class="form-control" value="admin@coochbehar.com" placeholder="admin@coochbehar.com" />
+                <input type="email" id="adminEmail" class="form-control" placeholder="Enter admin email" autocomplete="username" />
             </div>
             <div class="form-group">
                 <label>Admin Password</label>
-                <input type="password" id="adminPassword" class="form-control" value="admin123" placeholder="••••••••" />
+                <div class="pwd-input-wrap">
+                    <input type="password" id="adminPassword" class="form-control" placeholder="Enter admin password" autocomplete="current-password" />
+                    <button type="button" class="btn-pwd-eye" onclick="togglePasswordVisibility('adminPassword', this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
             </div>
             <button class="btn btn-primary" style="width:100%; padding:12px; font-size:1rem; margin-top:10px;" onclick="doAdminLogin()">
                 <i class="fas fa-sign-in-alt"></i> Login to Admin Console
             </button>
-            <div style="margin-top: 16px; font-size: 0.85rem; color: var(--text-muted); text-align: center;">
-                Default credentials pre-filled: <code>admin@coochbehar.com</code> / <code>admin123</code>
-            </div>
         </div>
     </div>
 
@@ -521,7 +637,7 @@
             <div class="nav-item" onclick="switchTab('drivers')"><i class="fas fa-motorcycle"></i> Delivery Boys & Map</div>
             <div class="nav-item" onclick="switchTab('customers')"><i class="fas fa-users"></i> Customers</div>
             <div class="nav-item" onclick="switchTab('coupons')"><i class="fas fa-ticket-alt"></i> Coupons & Promos</div>
-            <div class="nav-item" onclick="switchTab('settings')"><i class="fas fa-key"></i> Security & Password</div>
+            <div class="nav-item" onclick="switchTab('settings')"><i class="fas fa-sliders-h"></i> Settings & Customer Care</div>
         </div>
         <div class="sidebar-footer">
             <div class="admin-profile">
@@ -541,12 +657,29 @@
     <div class="main-wrapper">
         <div class="topbar">
             <div class="page-title" id="topbarTitle">Executive Dashboard</div>
-            <div class="topbar-actions">
+            <div class="topbar-actions" style="display: flex; align-items: center; gap: 14px;">
+                <!-- Live Admin Notification Bell -->
+                <div class="notif-wrapper">
+                    <button class="notif-bell-btn" onclick="toggleAdminNotifications()" title="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notif-badge" id="adminNotifBadge" style="display:none;">0</span>
+                    </button>
+                    <div class="notif-dropdown" id="adminNotifDropdown">
+                        <div class="notif-header">
+                            <span><i class="fas fa-bell" style="color:var(--primary);"></i> Live Notifications</span>
+                            <button class="btn btn-outline btn-sm" style="font-size: 0.72rem; padding: 2px 8px;" onclick="markAdminNotificationsRead()">Mark all read</button>
+                        </div>
+                        <div class="notif-list" id="adminNotifList">
+                            <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">No new notifications</div>
+                        </div>
+                    </div>
+                </div>
+
                 <a href="/" target="_blank" class="btn-view-store">
-                    <i class="fas fa-external-link-alt"></i> Open Customer Store
+                    <i class="fas fa-external-link-alt"></i> Customer Store
                 </a>
                 <a href="/driver.html" target="_blank" class="btn-view-store" style="color: var(--primary);">
-                    <i class="fas fa-motorcycle"></i> Open Delivery Boy App
+                    <i class="fas fa-motorcycle"></i> Delivery Boy App
                 </a>
             </div>
         </div>
@@ -823,31 +956,109 @@
                 </div>
             </div>
 
-            <!-- TAB 9: SECURITY & CHANGE PASSWORD -->
+            <!-- TAB 9: STORE SETTINGS, CUSTOMER CARE & SECURITY -->
             <div id="tab-settings" class="tab-content" style="display:none;">
-                <div style="max-width: 600px; margin: 0 auto;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto;">
+                    
+                    <!-- PANEL 1: CUSTOMER CARE CONTACT -->
                     <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-headset" style="color:var(--primary);"></i> Customer Care & Support</h3>
+                        </div>
+                        <div class="modal-body">
+                            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;">
+                                Changes here are immediately reflected in the public storefront footer, help center, and contact cards.
+                            </p>
+                            <div class="form-group">
+                                <label><i class="fas fa-phone-alt" style="color:var(--primary);"></i> Customer Care Phone / Helpline</label>
+                                <input type="text" id="settContactPhone" class="form-control" placeholder="+91 98765 43210" />
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-envelope" style="color:var(--primary);"></i> Support & Grievance Email</label>
+                                <input type="email" id="settContactEmail" class="form-control" placeholder="care@shopezy.com" />
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> Office / Hub Address (Cooch Behar)</label>
+                                <textarea id="settContactAddress" class="form-control" rows="3" placeholder="Shopezy Central Hub, Near Rajbari, Cooch Behar, West Bengal 736101"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-clock" style="color:var(--primary);"></i> Operating / Support Hours</label>
+                                <input type="text" id="settContactHours" class="form-control" placeholder="Monday - Sunday: 8:00 AM - 10:00 PM" />
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="saveCustomerCareSettings()">
+                                <i class="fas fa-save"></i> Save Customer Care Info
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PANEL 2: SOCIAL MEDIA LINKS -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-share-alt" style="color:var(--primary);"></i> Online & Social Media Links</h3>
+                        </div>
+                        <div class="modal-body">
+                            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;">
+                                Connect your official social channels. These links appear in the customer website footer and header.
+                            </p>
+                            <div class="form-group">
+                                <label><i class="fab fa-whatsapp" style="color:#25D366;"></i> WhatsApp Support Chat Link / Number</label>
+                                <input type="text" id="settSocialWa" class="form-control" placeholder="https://wa.me/919876543210" />
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fab fa-facebook" style="color:#1877F2;"></i> Facebook Page URL</label>
+                                <input type="url" id="settSocialFb" class="form-control" placeholder="https://facebook.com/shopezy.coochbehar" />
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fab fa-instagram" style="color:#E4405F;"></i> Instagram Profile URL</label>
+                                <input type="url" id="settSocialIg" class="form-control" placeholder="https://instagram.com/shopezy.coochbehar" />
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fab fa-twitter" style="color:#1DA1F2;"></i> Twitter / X Profile URL</label>
+                                <input type="url" id="settSocialTw" class="form-control" placeholder="https://twitter.com/shopezy_in" />
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fab fa-youtube" style="color:#FF0000;"></i> YouTube Channel URL</label>
+                                <input type="url" id="settSocialYt" class="form-control" placeholder="https://youtube.com/@shopezy" />
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="saveSocialSettings()">
+                                <i class="fas fa-save"></i> Save Social Media Links
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PANEL 3: CHANGE ADMIN PASSWORD -->
+                    <div class="panel" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto; width: 100%;">
                         <div class="panel-header">
                             <h3><i class="fas fa-lock" style="color:var(--primary);"></i> Change Admin Password</h3>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
                                 <label>Current Admin Password</label>
-                                <input type="password" id="currAdminPwd" class="form-control" placeholder="Current password" />
+                                <div class="pwd-input-wrap">
+                                    <input type="password" id="currAdminPwd" class="form-control" placeholder="Current password" />
+                                    <button type="button" class="btn-pwd-eye" onclick="togglePasswordVisibility('currAdminPwd', this)"><i class="fas fa-eye"></i></button>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label>New Password</label>
-                                <input type="password" id="newAdminPwd" class="form-control" placeholder="New password (min 6 characters)" />
+                                <div class="pwd-input-wrap">
+                                    <input type="password" id="newAdminPwd" class="form-control" placeholder="New password (min 6 characters)" />
+                                    <button type="button" class="btn-pwd-eye" onclick="togglePasswordVisibility('newAdminPwd', this)"><i class="fas fa-eye"></i></button>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label>Confirm New Password</label>
-                                <input type="password" id="confirmAdminPwd" class="form-control" placeholder="Confirm new password" />
+                                <div class="pwd-input-wrap">
+                                    <input type="password" id="confirmAdminPwd" class="form-control" placeholder="Confirm new password" />
+                                    <button type="button" class="btn-pwd-eye" onclick="togglePasswordVisibility('confirmAdminPwd', this)"><i class="fas fa-eye"></i></button>
+                                </div>
                             </div>
                             <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="changeAdminPassword()">
                                 <i class="fas fa-shield-alt"></i> Update Admin Password
                             </button>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -1119,7 +1330,7 @@
                 drivers: 'Delivery Boys & Map',
                 customers: 'Registered Customers',
                 coupons: 'Promotions & Coupons',
-                settings: 'Security & Change Password'
+                settings: 'Store Settings, Customer Care & Security'
             };
             document.getElementById('topbarTitle').innerText = titles[tab] || 'Admin Console';
 
@@ -1134,6 +1345,7 @@
             if (tab === 'drivers') loadDriversAndMap();
             if (tab === 'customers') loadCustomers();
             if (tab === 'coupons') loadCoupons();
+            if (tab === 'settings') loadAdminSettings();
         }
 
         async function loadDashboard() {
@@ -1836,12 +2048,155 @@
             }
         }
 
+        /* ======================== PASSWORD VISIBILITY TOGGLE ======================== */
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            const icon = btn.querySelector('i');
+            if (icon) {
+                icon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
+            }
+        }
+
+        /* ======================== STORE SETTINGS & CUSTOMER CARE ======================== */
+        async function loadAdminSettings() {
+            try {
+                const data = await api('/admin/settings');
+                if (data.success && data.settings) {
+                    const s = data.settings;
+                    if (s.contact_phone) document.getElementById('settContactPhone').value = s.contact_phone;
+                    if (s.contact_email) document.getElementById('settContactEmail').value = s.contact_email;
+                    if (s.contact_address) document.getElementById('settContactAddress').value = s.contact_address;
+                    if (s.contact_hours) document.getElementById('settContactHours').value = s.contact_hours;
+                    if (s.social_whatsapp) document.getElementById('settSocialWa').value = s.social_whatsapp;
+                    if (s.social_facebook) document.getElementById('settSocialFb').value = s.social_facebook;
+                    if (s.social_instagram) document.getElementById('settSocialIg').value = s.social_instagram;
+                    if (s.social_twitter) document.getElementById('settSocialTw').value = s.social_twitter;
+                    if (s.social_youtube) document.getElementById('settSocialYt').value = s.social_youtube;
+                }
+            } catch (err) {
+                console.error('Failed to load settings:', err);
+            }
+        }
+
+        async function saveCustomerCareSettings() {
+            const phone = document.getElementById('settContactPhone').value.trim();
+            const email = document.getElementById('settContactEmail').value.trim();
+            const address = document.getElementById('settContactAddress').value.trim();
+            const hours = document.getElementById('settContactHours').value.trim();
+
+            try {
+                const res = await api('/admin/settings', 'PUT', {
+                    settings: {
+                        contact_phone: phone,
+                        contact_email: email,
+                        contact_address: address,
+                        contact_hours: hours
+                    }
+                });
+                showToast(res.message || 'Customer Care details saved successfully!');
+            } catch (err) {
+                alert(err.message || 'Failed to save settings');
+            }
+        }
+
+        async function saveSocialSettings() {
+            const wa = document.getElementById('settSocialWa').value.trim();
+            const fb = document.getElementById('settSocialFb').value.trim();
+            const ig = document.getElementById('settSocialIg').value.trim();
+            const tw = document.getElementById('settSocialTw').value.trim();
+            const yt = document.getElementById('settSocialYt').value.trim();
+
+            try {
+                const res = await api('/admin/settings', 'PUT', {
+                    settings: {
+                        social_whatsapp: wa,
+                        social_facebook: fb,
+                        social_instagram: ig,
+                        social_twitter: tw,
+                        social_youtube: yt
+                    }
+                });
+                showToast(res.message || 'Social Media links saved successfully!');
+            } catch (err) {
+                alert(err.message || 'Failed to save social links');
+            }
+        }
+
+        /* ======================== ADMIN NOTIFICATIONS ======================== */
+        async function loadAdminNotifications() {
+            if (!adminToken) return;
+            try {
+                const data = await api('/admin/notifications');
+                if (data.success) {
+                    const badge = document.getElementById('adminNotifBadge');
+                    if (data.unread_count > 0) {
+                        badge.innerText = data.unread_count;
+                        badge.style.display = 'flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+
+                    const list = document.getElementById('adminNotifList');
+                    if (!data.notifications || data.notifications.length === 0) {
+                        list.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">No notifications yet</div>';
+                        return;
+                    }
+
+                    list.innerHTML = data.notifications.map(n => `
+                        <div class="notif-item ${n.is_read ? '' : 'unread'}">
+                            <div class="notif-icon">
+                                <i class="${n.type === 'order' ? 'fas fa-shopping-cart' : n.type === 'delivery' ? 'fas fa-motorcycle' : 'fas fa-bell'}"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 700; color: var(--text-main); font-size: 0.85rem;">${n.title}</div>
+                                <div style="color: var(--text-muted); margin-top: 2px;">${n.message || ''}</div>
+                                <div style="font-size: 0.72rem; color: #94A3B8; margin-top: 4px;">${new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error('Failed to load notifications:', err);
+            }
+        }
+
+        function toggleAdminNotifications() {
+            const dd = document.getElementById('adminNotifDropdown');
+            const isOpen = dd.style.display === 'block';
+            dd.style.display = isOpen ? 'none' : 'block';
+            if (!isOpen) {
+                loadAdminNotifications();
+            }
+        }
+
+        async function markAdminNotificationsRead() {
+            try {
+                await api('/admin/notifications/mark-read', 'PUT', {});
+                document.getElementById('adminNotifBadge').style.display = 'none';
+                loadAdminNotifications();
+            } catch (e) {}
+        }
+
+        // Close notification dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const wrapper = document.querySelector('.notif-wrapper');
+            const dd = document.getElementById('adminNotifDropdown');
+            if (wrapper && dd && !wrapper.contains(e.target)) {
+                dd.style.display = 'none';
+            }
+        });
+
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
         // Init check
         if (adminToken) {
             document.getElementById('loginOverlay').style.display = 'none';
             loadDashboard();
+            loadAdminNotifications();
+            setInterval(loadAdminNotifications, 15000); // Live poll notifications
         }
     </script>
 </body>

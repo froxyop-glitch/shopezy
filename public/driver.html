@@ -258,6 +258,123 @@
             font-size: 0.95rem;
         }
 
+        /* Password Visibility Toggle */
+        .pwd-input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .pwd-input-wrap input {
+            padding-right: 42px !important;
+        }
+        .btn-pwd-eye {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            font-size: 0.95rem;
+        }
+        .btn-pwd-eye:hover { color: var(--primary); }
+
+        /* Order Pool & Notifications */
+        .pool-badge {
+            background: #EF4444;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+        }
+        .pool-card {
+            background: white;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 14px;
+            border: 2px dashed #CBD5E1;
+            box-shadow: var(--shadow);
+            transition: all 0.2s;
+        }
+        .pool-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-claim {
+            width: 100%;
+            padding: 12px;
+            background: #10B981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+            transition: background 0.2s;
+        }
+        .btn-claim:hover { background: #059669; }
+
+        /* Header Notification Dropdown */
+        .rider-notif-btn {
+            position: relative;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        .rider-notif-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #EF4444;
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 3px;
+        }
+        .rider-notif-menu {
+            position: absolute;
+            top: 54px;
+            right: 14px;
+            width: 320px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            z-index: 500;
+            display: none;
+            overflow: hidden;
+            color: var(--dark);
+        }
+        .rider-notif-item {
+            padding: 10px 14px;
+            border-bottom: 1px solid #F1F5F9;
+            font-size: 0.8rem;
+        }
+        .rider-notif-item.unread {
+            background: #FEF3C7;
+        }
+
         #driverToast {
             position: fixed;
             top: 20px;
@@ -287,18 +404,20 @@
             </div>
             <div class="form-group">
                 <label>Rider Email</label>
-                <input type="email" id="driverEmail" class="form-control" value="raju@delivery.com" placeholder="raju@delivery.com" />
+                <input type="email" id="driverEmail" class="form-control" placeholder="Enter rider email" autocomplete="username" />
             </div>
             <div class="form-group">
                 <label>Rider Password</label>
-                <input type="password" id="driverPassword" class="form-control" value="delivery123" placeholder="••••••••" />
+                <div class="pwd-input-wrap">
+                    <input type="password" id="driverPassword" class="form-control" placeholder="Enter rider password" autocomplete="current-password" />
+                    <button type="button" class="btn-pwd-eye" onclick="togglePasswordVisibility('driverPassword', this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
             </div>
             <button class="btn btn-primary" style="width: 100%; padding: 12px;" onclick="doDriverLogin()">
                 <i class="fas fa-sign-in-alt"></i> Start Shift / Login
             </button>
-            <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-muted); text-align: center;">
-                Demo rider: <code>raju@delivery.com</code> / <code>delivery123</code>
-            </div>
         </div>
     </div>
 
@@ -308,9 +427,26 @@
             <i class="fas fa-shipping-fast"></i>
             <div>Shopezy Rider</div>
         </div>
-        <div class="online-toggle" onclick="toggleOnlineStatus()">
-            <div class="status-dot" id="statusDot"></div>
-            <span id="shiftStatusText">ON DUTY</span>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <!-- Rider Notifications Bell -->
+            <button class="rider-notif-btn" onclick="toggleDriverNotifications()" title="Notifications">
+                <i class="fas fa-bell"></i>
+                <span class="rider-notif-badge" id="driverNotifBadge" style="display:none;">0</span>
+            </button>
+            <div class="rider-notif-menu" id="driverNotifMenu">
+                <div style="padding: 10px 14px; background: #F8FAFC; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 0.85rem;">
+                    <span><i class="fas fa-bell" style="color:var(--primary);"></i> Rider Alerts</span>
+                    <button class="btn btn-outline" style="font-size:0.7rem; padding: 2px 6px;" onclick="markDriverNotificationsRead()">Mark read</button>
+                </div>
+                <div id="driverNotifList" style="max-height: 250px; overflow-y: auto;">
+                    <div style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 0.8rem;">No new alerts</div>
+                </div>
+            </div>
+
+            <div class="online-toggle" onclick="toggleOnlineStatus()">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="shiftStatusText">ON DUTY</span>
+            </div>
         </div>
     </div>
 
@@ -323,7 +459,7 @@
                 <div class="mini-stat">
                     <div class="mini-stat-icon orange"><i class="fas fa-box-open"></i></div>
                     <div>
-                        <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Assigned</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">My Deliveries</div>
                         <div style="font-size:1.4rem; font-weight:800;" id="assignedCount">0</div>
                     </div>
                 </div>
@@ -337,7 +473,7 @@
             </div>
 
             <h3 style="font-size: 1.1rem; margin-bottom: 12px; display:flex; align-items:center; justify-content:space-between;">
-                <span>Today's Deliveries</span>
+                <span>Assigned to Me</span>
                 <button class="btn btn-outline" style="padding:4px 10px; font-size:0.75rem;" onclick="loadDriverOrders()">
                     <i class="fas fa-sync-alt"></i> Refresh
                 </button>
@@ -345,6 +481,29 @@
 
             <div id="ordersList">
                 <p style="text-align:center; padding: 30px; color:var(--text-muted);">Loading assigned deliveries...</p>
+            </div>
+        </div>
+
+        <!-- VIEW 1B: AVAILABLE ORDERS POOL (OPEN DELIVERIES WAITING FOR RIDERS) -->
+        <div id="view-pool" class="driver-view" style="display:none;">
+            <div style="background: linear-gradient(135deg, rgba(255,107,53,0.1), rgba(0,78,137,0.1)); border-radius:12px; padding:16px; margin-bottom:16px; border:1px solid rgba(255,107,53,0.3);">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                    <div>
+                        <h4 style="color:var(--dark); font-size:1rem; margin-bottom:4px;">
+                            <i class="fas fa-layer-group" style="color:var(--primary);"></i> Cooch Behar Order Pool
+                        </h4>
+                        <p style="font-size:0.8rem; color:var(--text-muted);">
+                            Unclaimed deliveries ready for pickup. Accept an order to assign it exclusively to you!
+                        </p>
+                    </div>
+                    <button class="btn btn-outline" style="padding:4px 10px; font-size:0.75rem;" onclick="loadAvailablePool()">
+                        <i class="fas fa-sync-alt"></i> Refresh Pool
+                    </button>
+                </div>
+            </div>
+
+            <div id="poolOrdersList">
+                <p style="text-align:center; padding: 30px; color:var(--text-muted);">Checking open orders...</p>
             </div>
         </div>
 
@@ -385,15 +544,24 @@
                 <h4 style="font-size:1rem; margin-bottom:14px;"><i class="fas fa-key" style="color:var(--primary);"></i> Change Rider Password</h4>
                 <div class="form-group">
                     <label>Current Password</label>
-                    <input type="password" id="driverCurrPwd" class="form-control" placeholder="Current password" />
+                    <div class="pwd-input-wrap">
+                        <input type="password" id="driverCurrPwd" class="form-control" placeholder="Current password" />
+                        <button type="button" class="btn-pwd-eye" onclick="togglePasswordVisibility('driverCurrPwd', this)"><i class="fas fa-eye"></i></button>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>New Password</label>
-                    <input type="password" id="driverNewPwd" class="form-control" placeholder="New password" />
+                    <div class="pwd-input-wrap">
+                        <input type="password" id="driverNewPwd" class="form-control" placeholder="New password (min 6 characters)" />
+                        <button type="button" class="btn-pwd-eye" onclick="togglePasswordVisibility('driverNewPwd', this)"><i class="fas fa-eye"></i></button>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Confirm New Password</label>
-                    <input type="password" id="driverConfirmPwd" class="form-control" placeholder="Confirm password" />
+                    <div class="pwd-input-wrap">
+                        <input type="password" id="driverConfirmPwd" class="form-control" placeholder="Confirm password" />
+                        <button type="button" class="btn-pwd-eye" onclick="togglePasswordVisibility('driverConfirmPwd', this)"><i class="fas fa-eye"></i></button>
+                    </div>
                 </div>
                 <button class="btn btn-primary" style="width:100%; margin-top:8px;" onclick="changeDriverPassword()">
                     Update Password
@@ -411,7 +579,11 @@
     <div class="bottom-nav">
         <div class="nav-tab active" onclick="switchDriverView('orders', this)">
             <i class="fas fa-box-open"></i>
-            <span>Orders</span>
+            <span>My Orders</span>
+        </div>
+        <div class="nav-tab" onclick="switchDriverView('pool', this)">
+            <i class="fas fa-layer-group"></i>
+            <span>Order Pool <span class="pool-badge" id="poolBadge">0</span></span>
         </div>
         <div class="nav-tab" onclick="switchDriverView('map', this)">
             <i class="fas fa-map-marked-alt"></i>
@@ -513,6 +685,12 @@
 
             if (view === 'map') {
                 setTimeout(initDriverMap, 200);
+            }
+            if (view === 'pool') {
+                loadAvailablePool();
+            }
+            if (view === 'orders') {
+                loadDriverOrders();
             }
         }
 
@@ -778,10 +956,181 @@
             }
         }
 
-        // Auto check token
+        /* ======================== PASSWORD VISIBILITY TOGGLE ======================== */
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            const icon = btn.querySelector('i');
+            if (icon) {
+                icon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
+            }
+        }
+
+        /* ======================== AVAILABLE ORDERS POOL & CLAIMING ======================== */
+        let poolOrdersData = [];
+
+        async function loadAvailablePool() {
+            if (!driverToken) return;
+            try {
+                const res = await fetch(`${API_URL}/delivery/available-pool`, {
+                    headers: { 'Authorization': `Bearer ${driverToken}` }
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message);
+
+                poolOrdersData = data.orders || [];
+                const badge = document.getElementById('poolBadge');
+                if (badge) badge.innerText = poolOrdersData.length;
+
+                const container = document.getElementById('poolOrdersList');
+                if (!container) return;
+
+                if (poolOrdersData.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align:center; padding: 40px; background:white; border-radius:12px; border:1px solid var(--border);">
+                            <i class="fas fa-check-double" style="font-size:3rem; color:#10B981; margin-bottom:12px;"></i>
+                            <h4>All Orders Dispatched</h4>
+                            <p style="color:var(--text-muted); font-size:0.85rem; margin-top:4px;">
+                                No open deliveries waiting in the pool right now. When a customer places an order, it will appear here immediately!
+                            </p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = poolOrdersData.map(o => {
+                    const addr = o.shipping_address || {};
+                    return `
+                        <div class="pool-card">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <span style="font-weight:800; color:var(--primary); font-size:1.05rem;">#${o.order_number}</span>
+                                <span style="background:#DCFCE7; color:#166534; font-size:0.75rem; font-weight:700; padding:3px 8px; border-radius:12px;">
+                                    OPEN FOR PICKUP
+                                </span>
+                            </div>
+                            <div style="font-size:0.9rem; font-weight:700; color:var(--dark); margin-bottom:4px;">
+                                <i class="fas fa-user" style="color:var(--text-muted); margin-right:6px;"></i> ${o.customer_name}
+                            </div>
+                            <div style="font-size:0.82rem; color:var(--text-muted); margin-bottom:8px;">
+                                <i class="fas fa-map-pin" style="color:var(--primary); margin-right:6px;"></i> ${addr.address || 'Central Cooch Behar'}, ${addr.city || 'Cooch Behar'} (${addr.pincode || '736101'})
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; background:#F8FAFC; padding:8px 12px; border-radius:8px; font-size:0.85rem;">
+                                <span>Amount: <strong>₹${o.total}</strong> (${o.payment_method.toUpperCase()})</span>
+                                <span>Items: <strong>${o.items ? o.items.length : 1}</strong></span>
+                            </div>
+                            <button class="btn-claim" onclick="claimOrder(${o.id})">
+                                <i class="fas fa-motorcycle"></i> Accept / Claim Delivery
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error('Failed to load pool:', err);
+            }
+        }
+
+        async function claimOrder(orderId) {
+            try {
+                const res = await fetch(`${API_URL}/delivery/orders/${orderId}/claim`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${driverToken}`
+                    }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('🎉 Delivery accepted! Added to your My Orders list.');
+                    loadAvailablePool();
+                    loadDriverOrders();
+                    // Switch to orders view to begin delivery
+                    const ordersTab = document.querySelectorAll('.nav-tab')[0];
+                    switchDriverView('orders', ordersTab);
+                } else {
+                    alert(data.message || 'Could not claim order (may have been claimed by another rider)');
+                    loadAvailablePool();
+                }
+            } catch (err) {
+                alert('Claim failed: ' + err.message);
+            }
+        }
+
+        /* ======================== RIDER NOTIFICATIONS ======================== */
+        async function loadDriverNotifications() {
+            if (!driverToken) return;
+            try {
+                const res = await fetch(`${API_URL}/delivery/notifications`, {
+                    headers: { 'Authorization': `Bearer ${driverToken}` }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const badge = document.getElementById('driverNotifBadge');
+                    if (data.unread_count > 0) {
+                        badge.innerText = data.unread_count;
+                        badge.style.display = 'flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+
+                    const list = document.getElementById('driverNotifList');
+                    if (!data.notifications || data.notifications.length === 0) {
+                        list.innerHTML = '<div style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 0.8rem;">No alerts right now</div>';
+                        return;
+                    }
+
+                    list.innerHTML = data.notifications.map(n => `
+                        <div class="rider-notif-item ${n.is_read ? '' : 'unread'}">
+                            <div style="font-weight:700; color:var(--dark);">${n.title}</div>
+                            <div style="color:var(--text-muted); font-size:0.78rem; margin-top:2px;">${n.message || ''}</div>
+                            <div style="font-size:0.7rem; color:#94A3B8; margin-top:4px;">${new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                        </div>
+                    `).join('');
+                }
+            } catch (e) {}
+        }
+
+        function toggleDriverNotifications() {
+            const menu = document.getElementById('driverNotifMenu');
+            const isOpen = menu.style.display === 'block';
+            menu.style.display = isOpen ? 'none' : 'block';
+            if (!isOpen) {
+                loadDriverNotifications();
+            }
+        }
+
+        async function markDriverNotificationsRead() {
+            try {
+                await fetch(`${API_URL}/delivery/notifications/mark-read`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${driverToken}` }
+                });
+                document.getElementById('driverNotifBadge').style.display = 'none';
+                loadDriverNotifications();
+            } catch (e) {}
+        }
+
+        // Close dropdown when tapping elsewhere
+        document.addEventListener('click', (e) => {
+            const btn = document.querySelector('.rider-notif-btn');
+            const menu = document.getElementById('driverNotifMenu');
+            if (btn && menu && !btn.contains(e.target) && !menu.contains(e.target)) {
+                menu.style.display = 'none';
+            }
+        });
+
+        // Auto check token & start live pool polling
         if (driverToken) {
             document.getElementById('driverLoginModal').style.display = 'none';
             loadDriverOrders();
+            loadAvailablePool();
+            loadDriverNotifications();
+            setInterval(() => {
+                loadDriverOrders();
+                loadAvailablePool();
+                loadDriverNotifications();
+            }, 10000); // 10s live synchronization
         }
     </script>
 </body>

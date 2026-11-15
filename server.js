@@ -60,6 +60,20 @@ app.use('/api/delivery', deliveryRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/customers', customerRoutes);
 
+// Public Settings Endpoint for Storefront & Visitors
+app.get('/api/settings', (req, res) => {
+    try {
+        const { getDb } = require('./database/init');
+        const db = getDb();
+        const rows = db.prepare('SELECT key, value FROM settings').all();
+        const settings = {};
+        rows.forEach(r => { settings[r.key] = r.value; });
+        res.json({ success: true, settings });
+    } catch (e) {
+        res.status(500).json({ success: false, message: 'Failed to fetch settings' });
+    }
+});
+
 // Public Banners Endpoint for Storefront
 app.get('/api/banners', (req, res) => {
     try {

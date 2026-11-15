@@ -43,6 +43,119 @@ router.get('/orders', verifyToken, isDelivery, (req, res) => {
     }
 });
 
+// GET /api/delivery/available-pool - Get unassigned orders waiting for riders to claim
+router.get('/available-pool', verifyToken, isDelivery, (req, res) => {
+    try {
+        const db = getDb();
+        const orders = db.prepare(`
+            SELECT o.*, u.name as customer_name, u.phone as customer_phone, u.email as customer_email
+            FROM orders o
+            JOIN users u ON o.user_id = u.id
+            WHERE o.delivery_boy_id IS NULL AND o.status IN ('pending', 'confirmed', 'processing')
+            ORDER BY o.created_at DESC
+        `).all();
+
+        const ordersWithItems = orders.map(order => {
+            const items = db.prepare('SELECT * FROM order_items WHERE order_id = ?').all(order.id);
+            let shippingAddress = {};
+            try { shippingAddress = JSON.parse(order.shipping_address || '{}'); } catch (e) {}
+            return {
+                ...order,
+                shipping_address: shippingAddress,
+                items
+            };
+        });
+
+        res.json({ success: true, orders: ordersWithItems });
+    } catch (err) {
+        console.error('Available pool error:', err);
+        res.status(500).json({ success: false, message: 'Failed to fetch available delivery pool' });
+    }
+});
+
+// POST /api/delivery/orders/:id/claim - Claim an open order from the pool
+router.post('/orders/:id/claim', verifyToken, isDelivery, (req, res) => {
+    try {
+        const { id } = req.params;
+        const db = getDb();
+
+        const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(id);
+        if (!order) {
+            return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+        if (order.delivery_boy_id) {
+            return res.status(400).json({ success: false, message: 'This delivery has already been claimed by another rider' });
+        }
+
+        const now = new Date().toISOString();
+        db.prepare(`
+            UPDATE orders 
+            SET delivery_boy_id = ?, 
+                status = CASE WHEN status = 'pending' THEN 'confirmed' ELSE status END,
+                updated_at = ?
+            WHERE id = ? AND delivery_boy_id IS NULL
+        `).run(req.user.id, now, id);
+
+        // Add tracking entry
+        db.prepare(`
+            INSERT INTO delivery_tracking (order_id, delivery_boy_id, status, lat, lng, notes)
+            VALUES (?, ?, 'confirmed', 26.3350, 89.4350, 'Rider accepted order from pool')
+        `).run(id, req.user.id);
+
+        // Notification for the rider
+        db.prepare(`
+            INSERT INTO notifications (user_id, title, message, type)
+            VALUES (?, 'Delivery Claimed', ?, 'delivery')
+        `).run(req.user.id, `You claimed Order #${order.order_number}. Head towards pickup hub.`);
+
+        // Notification for Admins
+        try {
+            const adminUsers = db.prepare("SELECT id FROM users WHERE role = 'admin'").all();
+            const riderUser = db.prepare("SELECT name FROM users WHERE id = ?").get(req.user.id);
+            const riderName = riderUser ? riderUser.name : 'Rider';
+            adminUsers.forEach(adm => {
+                db.prepare(`
+                    INSERT INTO notifications (user_id, title, message, type)
+                    VALUES (?, 'Order Claimed', ?, 'order')
+                `).run(adm.id, `Rider ${riderName} claimed Order #${order.order_number} from delivery pool`);
+            });
+        } catch (e) {}
+
+        res.json({ success: true, message: 'Order successfully claimed and assigned to you!' });
+    } catch (err) {
+        console.error('Claim order error:', err);
+        res.status(500).json({ success: false, message: 'Failed to claim order' });
+    }
+});
+
+// GET /api/delivery/notifications - Notifications for logged-in rider
+router.get('/notifications', verifyToken, isDelivery, (req, res) => {
+    try {
+        const db = getDb();
+        const notifications = db.prepare(`
+            SELECT * FROM notifications 
+            WHERE user_id = ? 
+            ORDER BY created_at DESC 
+            LIMIT 30
+        `).all(req.user.id);
+        const unreadCount = db.prepare('SELECT COUNT(*) as count FROM notifications WHERE user_id = ? AND is_read = 0').get(req.user.id).count;
+        res.json({ success: true, notifications, unread_count: unreadCount });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Failed to fetch notifications' });
+    }
+});
+
+// PUT /api/delivery/notifications/mark-read
+router.put('/notifications/mark-read', verifyToken, isDelivery, (req, res) => {
+    try {
+        const db = getDb();
+        db.prepare('UPDATE notifications SET is_read = 1 WHERE user_id = ?').run(req.user.id);
+        res.json({ success: true, message: 'All notifications marked as read' });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Failed to mark read' });
+    }
+});
+
 // PUT /api/delivery/orders/:id/status - Update order delivery status
 router.put('/orders/:id/status', verifyToken, isDelivery, (req, res) => {
     try {

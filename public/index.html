@@ -1197,6 +1197,185 @@
             .header-actions > div span { display: none; }
             .category-grid { grid-template-columns: repeat(2, 1fr); }
         }
+        /* ============ INDIE CREATIVE BACKGROUND & THEME ============ */
+        body {
+            background-color: #FAF6F0 !important;
+            background-image: 
+                radial-gradient(circle at 100% 0%, rgba(255, 107, 53, 0.05) 0%, transparent 45%),
+                radial-gradient(circle at 0% 100%, rgba(0, 78, 137, 0.06) 0%, transparent 45%),
+                url("data:image/svg+xml,%3Csvg width='52' height='52' viewBox='0 0 52 52' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M26 0l26 26-26 26L0 26 26 0zm0 6.5L6.5 26 26 45.5 45.5 26 26 6.5z' fill='%23C84B31' fill-opacity='0.035' fill-rule='evenodd'/%3E%3C/svg%3E") !important;
+            background-attachment: fixed !important;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            border-radius: 12px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 107, 53, 0.4);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.12);
+        }
+
+        /* Password Input Wrapper & Eye Toggle */
+        .pwd-field-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        .pwd-field-wrap input {
+            width: 100%;
+            padding-right: 44px !important;
+        }
+        .pwd-toggle-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #64748B;
+            cursor: pointer;
+            padding: 6px;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+            z-index: 5;
+        }
+        .pwd-toggle-btn:hover { color: var(--primary); }
+
+        /* Footer Staff & Delivery Portal */
+        .footer-portal-bar {
+            margin-top: 25px;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .footer-portal-title {
+            color: #F8FAFC;
+            font-size: 0.95rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .footer-portal-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .footer-portal-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+        }
+        .footer-portal-btn.admin {
+            background: linear-gradient(135deg, #FF6B35, #E55A28);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .footer-portal-btn.admin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,107,53,0.4);
+            color: white;
+        }
+        .footer-portal-btn.driver {
+            background: linear-gradient(135deg, #0284C7, #0369A1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .footer-portal-btn.driver:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(2,132,199,0.4);
+            color: white;
+        }
+
+        /* Mobile Fixed Bottom Navigation Bar */
+        .mobile-bottom-bar {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            body { padding-bottom: 70px !important; }
+            .mobile-bottom-bar {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 64px;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(12px);
+                border-top: 1px solid rgba(0,0,0,0.08);
+                box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+                z-index: 1000;
+                align-items: center;
+                justify-content: space-around;
+            }
+            .mobile-nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.72rem;
+                font-weight: 700;
+                color: #64748B;
+                cursor: pointer;
+                position: relative;
+                padding: 6px 12px;
+                min-width: 55px;
+                min-height: 48px;
+                transition: color 0.2s;
+            }
+            .mobile-nav-item i {
+                font-size: 1.25rem;
+                margin-bottom: 3px;
+            }
+            .mobile-nav-item.active, .mobile-nav-item:hover {
+                color: var(--primary);
+            }
+            .mobile-cart-badge {
+                position: absolute;
+                top: 4px;
+                right: 14px;
+                background: var(--primary);
+                color: white;
+                font-size: 0.65rem;
+                font-weight: 800;
+                min-width: 16px;
+                height: 16px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 3px;
+            }
+            .footer-portal-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .footer-portal-btns {
+                width: 100%;
+            }
+            .footer-portal-btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1276,12 +1455,13 @@
         <div class="footer-grid">
             <div class="footer-col">
                 <h3>Shopezy</h3>
-                <p>Your trusted local online marketplace. Quality products delivered right to your doorstep with love, ease, and care.</p>
+                <p id="footerSiteDesc">Your trusted Cooch Behar online marketplace. Quality products delivered right to your doorstep with love, ease, and care.</p>
                 <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="https://facebook.com" id="footerSocialFb" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com" id="footerSocialTw" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://instagram.com" id="footerSocialIg" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://youtube.com" id="footerSocialYt" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://wa.me/919876543210" id="footerSocialWa" target="_blank" title="WhatsApp Support" style="background:#25D366; color:white;"><i class="fab fa-whatsapp"></i></a>
                 </div>
             </div>
             <div class="footer-col">
@@ -1297,37 +1477,79 @@
             <div class="footer-col">
                 <h3>Customer Service</h3>
                 <ul>
-                    <li><a href="#">Help Center</a></li>
-                    <li><a href="#">Return Policy</a></li>
-                    <li><a href="#">Shipping Info</a></li>
+                    <li><a href="#">Help Center & FAQ</a></li>
+                    <li><a href="#">Cooch Behar Delivery Areas</a></li>
+                    <li><a href="#">Return & Refund Policy</a></li>
                     <li><a href="#">Privacy Policy</a></li>
                     <li><a href="#">Terms & Conditions</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h3>Contact Us</h3>
+                <h3>Customer Care & Support</h3>
                 <div class="contact-item">
                     <i class="fas fa-map-marker-alt"></i>
-                    <span>Sunity Road, Near Madan Mohan Temple, Cooch Behar, West Bengal 736101, India</span>
+                    <span id="footerAddress">Shopezy Hub, Near Cooch Behar Palace, Sagardighi, Cooch Behar - 736101</span>
                 </div>
                 <div class="contact-item">
-                    <i class="fas fa-phone"></i>
-                    <span>+91 98765 43210</span>
+                    <i class="fas fa-phone-alt"></i>
+                    <a href="tel:+919876543210" id="footerPhone" style="color:inherit; text-decoration:none;">+91 98765 43210</a>
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-envelope"></i>
-                    <span>support@shopezy.com</span>
+                    <a href="mailto:care@shopezy.com" id="footerEmail" style="color:inherit; text-decoration:none;">care@shopezy.com</a>
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-clock"></i>
-                    <span>Mon - Sat: 9AM - 9PM</span>
+                    <span id="footerHours">Mon - Sun: 8:00 AM - 10:00 PM</span>
                 </div>
             </div>
         </div>
+
+        <!-- Dedicated Staff & Partner Portals in Footer -->
+        <div class="footer-portal-bar">
+            <div class="footer-portal-title">
+                <i class="fas fa-user-shield" style="color:var(--accent);"></i>
+                <span>Shopezy Staff & Delivery Partners</span>
+            </div>
+            <div class="footer-portal-btns">
+                <a href="/admin.html" target="_blank" class="footer-portal-btn admin">
+                    <i class="fas fa-crown"></i> Admin Control Panel
+                </a>
+                <a href="/driver.html" target="_blank" class="footer-portal-btn driver">
+                    <i class="fas fa-motorcycle"></i> Delivery Partner / Rider App
+                </a>
+            </div>
+        </div>
+
         <div class="footer-bottom">
-            &copy; 2026 Shopezy. All rights reserved. Made with <i class="fas fa-heart" style="color:var(--red)"></i> for smart shopping
+            &copy; 2026 Shopezy Cooch Behar. All rights reserved. Made with <i class="fas fa-heart" style="color:var(--red)"></i> for smart shopping
         </div>
     </footer>
+
+    <!-- Fixed Mobile Bottom Navigation Bar -->
+    <div class="mobile-bottom-bar">
+        <div class="mobile-nav-item active" onclick="navigateTo('/')">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="mobile-nav-item" onclick="navigateTo('/category/all')">
+            <i class="fas fa-th-large"></i>
+            <span>Shop</span>
+        </div>
+        <div class="mobile-nav-item" onclick="navigateTo('/orders')">
+            <i class="fas fa-truck"></i>
+            <span>Orders</span>
+        </div>
+        <div class="mobile-nav-item" onclick="navigateTo('/cart')">
+            <i class="fas fa-shopping-bag"></i>
+            <span class="mobile-cart-badge" id="mobileCartCount">0</span>
+            <span>Cart</span>
+        </div>
+        <div class="mobile-nav-item" onclick="if(APP.token){navigateTo('/profile');}else{showModal('login');}">
+            <i class="fas fa-user"></i>
+            <span>Account</span>
+        </div>
+    </div>
 
     <!-- ========== AUTH MODALS ========== -->
     <div class="modal-overlay" id="loginModal">
@@ -1343,7 +1565,12 @@
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                    <div class="pwd-field-wrap">
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password">
+                        <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('loginPassword', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                     <div class="form-error">Password is required</div>
                 </div>
                 <button type="submit" class="btn-submit">Login</button>
@@ -1375,12 +1602,22 @@
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" id="signupPassword" placeholder="Create a password" required minlength="6">
+                    <div class="pwd-field-wrap">
+                        <input type="password" id="signupPassword" placeholder="Create a password" required minlength="6" autocomplete="new-password">
+                        <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('signupPassword', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                     <div class="form-error">Minimum 6 characters</div>
                 </div>
                 <div class="form-group">
                     <label>Confirm Password</label>
-                    <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required>
+                    <div class="pwd-field-wrap">
+                        <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required autocomplete="new-password">
+                        <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('signupConfirmPassword', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                     <div class="form-error">Passwords do not match</div>
                 </div>
                 <button type="submit" class="btn-submit">Create Account</button>
@@ -1728,6 +1965,8 @@
         const cartCount = APP.cart.reduce((sum, c) => sum + c.quantity, 0);
         document.getElementById('cartBadge').textContent = cartCount;
         document.getElementById('wishlistBadge').textContent = APP.wishlist.length;
+        const mobBadge = document.getElementById('mobileCartCount');
+        if (mobBadge) mobBadge.textContent = cartCount;
     }
 
     async function saveCartToServer() {
@@ -2800,9 +3039,27 @@
                     </div>
                     <div class="profile-section" id="profilePassword" style="display:none">
                         <h3>Change Password</h3>
-                        <div class="form-group"><label>Current Password</label><input type="password" id="currentPassword" placeholder="Enter current password"></div>
-                        <div class="form-group"><label>New Password</label><input type="password" id="newPassword" placeholder="Enter new password"></div>
-                        <div class="form-group"><label>Confirm New Password</label><input type="password" id="confirmNewPassword" placeholder="Confirm new password"></div>
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <div class="pwd-field-wrap">
+                                <input type="password" id="currentPassword" placeholder="Enter current password">
+                                <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('currentPassword', this)"><i class="fas fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <div class="pwd-field-wrap">
+                                <input type="password" id="newPassword" placeholder="Enter new password (min 6 characters)">
+                                <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('newPassword', this)"><i class="fas fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm New Password</label>
+                            <div class="pwd-field-wrap">
+                                <input type="password" id="confirmNewPassword" placeholder="Confirm new password">
+                                <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('confirmNewPassword', this)"><i class="fas fa-eye"></i></button>
+                            </div>
+                        </div>
                         <button class="btn-primary" onclick="changePassword()"><i class="fas fa-key"></i> Update Password</button>
                     </div>
                 </div>
@@ -2942,6 +3199,78 @@
         }
     }
 
+    /* ======================== PASSWORD VISIBILITY TOGGLE ======================== */
+    function togglePasswordVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        const icon = btn.querySelector('i');
+        if (icon) {
+            icon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
+        }
+    }
+
+    /* ======================== DYNAMIC CUSTOMER CARE & SOCIAL SETTINGS ======================== */
+    async function loadSiteSettings() {
+        try {
+            const res = await fetch('/api/settings');
+            const data = await res.json();
+            if (data.success && data.settings) {
+                const s = data.settings;
+                if (s.contact_phone) {
+                    const phoneEl = document.getElementById('footerPhone');
+                    if (phoneEl) {
+                        phoneEl.innerText = s.contact_phone;
+                        phoneEl.href = `tel:${s.contact_phone.replace(/\s+/g, '')}`;
+                    }
+                }
+                if (s.contact_email) {
+                    const emailEl = document.getElementById('footerEmail');
+                    if (emailEl) {
+                        emailEl.innerText = s.contact_email;
+                        emailEl.href = `mailto:${s.contact_email}`;
+                    }
+                }
+                if (s.contact_address) {
+                    const addrEl = document.getElementById('footerAddress');
+                    if (addrEl) addrEl.innerText = s.contact_address;
+                }
+                if (s.contact_hours) {
+                    const hrsEl = document.getElementById('footerHours');
+                    if (hrsEl) hrsEl.innerText = s.contact_hours;
+                }
+                if (s.site_description) {
+                    const descEl = document.getElementById('footerSiteDesc');
+                    if (descEl) descEl.innerText = s.site_description;
+                }
+                // Social links
+                if (s.social_facebook) {
+                    const fb = document.getElementById('footerSocialFb');
+                    if (fb) fb.href = s.social_facebook;
+                }
+                if (s.social_instagram) {
+                    const ig = document.getElementById('footerSocialIg');
+                    if (ig) ig.href = s.social_instagram;
+                }
+                if (s.social_twitter) {
+                    const tw = document.getElementById('footerSocialTw');
+                    if (tw) tw.href = s.social_twitter;
+                }
+                if (s.social_youtube) {
+                    const yt = document.getElementById('footerSocialYt');
+                    if (yt) yt.href = s.social_youtube;
+                }
+                if (s.social_whatsapp) {
+                    const wa = document.getElementById('footerSocialWa');
+                    if (wa) wa.href = s.social_whatsapp.startsWith('http') ? s.social_whatsapp : `https://wa.me/${s.social_whatsapp.replace(/\D/g, '')}`;
+                }
+            }
+        } catch (e) {
+            console.warn('Could not load public settings:', e);
+        }
+    }
+
     // ============ INIT ============
     function init() {
         generateSampleProducts();
@@ -2950,6 +3279,7 @@
         routeHandler();
         updateBadges();
         loadLiveProductsAndBanners();
+        loadSiteSettings();
     }
 
     document.addEventListener('DOMContentLoaded', init);
